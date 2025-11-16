@@ -1,6 +1,6 @@
 # Pytest Requests Project - GigaChat API Testing
 
-Фреймворк для автоматического тестирования GigaChat API с использованием PyTest.
+Фреймворк по автотестам GigaChat API с использованием PyTest.
 
 ## Установка
 
@@ -23,16 +23,6 @@ GIGACHAT_BASIC_AUTH_TOKEN
 ### Запуск всех тестов GigaChat API:
 ```bash
 pytest -v -m gigachat
-```
-
-### Запуск конкретного теста:
-```bash
-pytest -v tests/test_gigachat_api.py::TestGigaChatCompletions::test_chat_completions_basic
-```
-
-### Запуск всех тестов:
-```bash
-pytest -v
 ```
 
 ## Генерация Allure отчетов
