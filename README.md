@@ -25,16 +25,6 @@ GIGACHAT_BASIC_AUTH_TOKEN
 pytest -v -m gigachat
 ```
 
-### Запуск конкретного теста:
-```bash
-pytest -v tests/test_gigachat_api.py::TestGigaChatCompletions::test_chat_completions_basic
-```
-
-### Запуск всех тестов:
-```bash
-pytest -v
-```
-
 ## Генерация Allure отчетов
 
 Тесты уже размечены аннотациями Allure (`feature`, `story`, `severity`, шаги и вложения).
