@@ -1,0 +1,5 @@
+pytest>=9.0.0
+requests>=2.32.0
+jsonschema
+python-dotenv
+allure-pytest
