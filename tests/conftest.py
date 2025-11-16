@@ -14,21 +14,6 @@ GIGACHAT_OAUTH_URL = os.getenv('GIGACHAT_OAUTH_URL', 'https://ngw.devices.sberba
 from . import BASEURL_API
 
 
-# def pytest_addoption(parser):
-#     parser.addoption("--api", dest="api", type="string",
-#                       action="store", default="", help="")
-#     parser.addoption("--hash", dest="hash", type="string",
-#                       action="store", default="", help="")
-#
-#
-# def pytest_generate_tests(metafunc):
-#     if 'api' in metafunc.fixturenames:
-#         metafunc.parametrize("api", [metafunc.config.getoption('api')])
-#
-#     if 'hash' in metafunc.fixturenames:
-#         metafunc.parametrize("hash", [metafunc.config.getoption('hash')])
-
-
 def get_token():
     """
     Получает OAuth токен для доступа к GigaChat API.

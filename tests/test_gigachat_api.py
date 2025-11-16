@@ -15,11 +15,9 @@ class TestGigaChatCompletions:
     """Тестовый набор для метода chat/completions GigaChat API"""
 
     @allure.title("Базовый ответ на простое пользовательское сообщение")
+    @allure.description("""Базовый тест: отправка простого сообщения и проверка успешного ответа""")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_chat_completions_basic(self, api_base_url, api_headers):
-        """
-        Базовый тест: отправка простого сообщения и проверка успешного ответа
-        """
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "GigaChat",
@@ -53,11 +51,10 @@ class TestGigaChatCompletions:
             assert len(data["choices"][0]["message"]["content"]) > 0, "Ответ должен содержать текст"
 
     @allure.title("Ответ с учетом системного промпта")
+    @allure.description("""Тест: отправка сообщения с системным промптом""")
     @allure.severity(allure.severity_level.NORMAL)
     def test_chat_completions_with_system_message(self, api_base_url, api_headers):
-        """
-        Тест: отправка сообщения с системным промптом
-        """
+
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "GigaChat",
@@ -83,11 +80,10 @@ class TestGigaChatCompletions:
             assert data["choices"][0]["message"]["role"] == "assistant"
 
     @allure.title("Диалог из нескольких сообщений в рамках одной сессии")
+    @allure.description("""Тест: диалог с несколькими сообщениями""")
     @allure.severity(allure.severity_level.NORMAL)
     def test_chat_completions_multiple_messages(self, api_base_url, api_headers):
-        """
-        Тест: диалог с несколькими сообщениями
-        """
+
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "GigaChat",
@@ -118,11 +114,14 @@ class TestGigaChatCompletions:
 
     @allure.title("Разные значения temperature")
     @allure.severity(allure.severity_level.MINOR)
-    @pytest.mark.parametrize("temperature", [0.0001, 0.1, 0.5, 0.9, 1.0, 1.5])
+    @allure.description("""Тест: проверка работы с разными значениями temperature.
+        Используем от 0.00005 до 2.6 так как в документации указано, что значения от 0.0 до 0.0001, то параметры
+        temperature и top_p будут сброшены в режим, обеспечивающий максимально детерминированный (стабильный) ответ
+        модели. Аналогично для значений от 2.0 - набор токенов в ответе модели может отличаться избыточной случайностью.
+        """)
+    @pytest.mark.parametrize("temperature", [0.00005, 0.0001, 0.1, 0.5, 0.9, 1.0, 1.5, 2.0, 2.6])
     def test_chat_completions_temperature(self, api_base_url, api_headers, temperature):
-        """
-        Тест: проверка работы с разными значениями temperature.
-        """
+
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "GigaChat",
@@ -144,11 +143,10 @@ class TestGigaChatCompletions:
             validate(instance=data, schema=schema_chat_completion)
 
     @allure.title("Ограничение максимального количества токенов в ответе")
+    @allure.description("""Тест: проверка ограничения максимального количества токенов в ответе""")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_chat_completions_max_tokens(self, api_base_url, api_headers):
-        """
-        Тест: проверка ограничения максимального количества токенов в ответе
-        """
+
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "GigaChat",
@@ -171,12 +169,13 @@ class TestGigaChatCompletions:
             assert data["usage"]["completion_tokens"] <= 50
 
     @allure.title("Обработка пустого сообщения")
-    @allure.severity(allure.severity_level.NORMAL)
-    def test_chat_completions_empty_message(self, api_base_url, api_headers):
-        """
+    @allure.description("""
         Тест: проверка обработки пустого сообщения.
         Мы ожидаем, что API вернет ошибку 422, так как пустое сообщение не является валидным.
-        """
+        """)
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_chat_completions_empty_message(self, api_base_url, api_headers):
+
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "GigaChat",
@@ -195,11 +194,10 @@ class TestGigaChatCompletions:
             assert response.status_code in [422]
 
     @allure.title("Обработка невалидной модели")
+    @allure.description("""Тест: проверка обработки невалидной модели""")
     @allure.severity(allure.severity_level.NORMAL)
     def test_chat_completions_invalid_model(self, api_base_url, api_headers):
-        """
-        Тест: проверка обработки невалидной модели
-        """
+
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "InvalidModel",
@@ -218,11 +216,10 @@ class TestGigaChatCompletions:
             assert response.status_code in [400, 404, 422]
 
     @allure.title("Детальная проверка структуры и usage")
+    @allure.description("""Тест: детальная проверка структуры ответа""")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_chat_completions_response_structure(self, api_base_url, api_headers):
-        """
-        Тест: детальная проверка структуры ответа
-        """
+
         url = f"{api_base_url}/chat/completions"
         payload = {
             "model": "GigaChat",
