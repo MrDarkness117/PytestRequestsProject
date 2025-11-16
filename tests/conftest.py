@@ -36,8 +36,10 @@ def get_token():
         'RqUID': str(uuid.uuid4()),
         'Authorization': auth_header
     }
-    
-    response = requests.post(GIGACHAT_OAUTH_URL, headers=headers, data=payload)
+
+    # отключаем проверку сертификата в verify=False. В идеале нужен .pem сертификат, буду временно без него.
+    # TODO: Добавить загрузку .pem-сертификата для контейнера
+    response = requests.post(GIGACHAT_OAUTH_URL, headers=headers, data=payload, verify=False)
     response.raise_for_status()  # Вызовет исключение при ошибке HTTP
     
     response_data = response.json()

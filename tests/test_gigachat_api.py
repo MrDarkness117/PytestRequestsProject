@@ -31,7 +31,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос к GigaChat API"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
             # Прикрепляем запрос/ответ к отчету
             allure.attach(json.dumps(payload, ensure_ascii=False, indent=2),
                           name="request_body",
@@ -71,7 +71,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с системным промптом"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
 
         with allure.step("Проверяем статус и роль ответа"):
             assert response.status_code == 200
@@ -104,7 +104,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с несколькими сообщениями"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
 
         with allure.step("Проверяем, что токены были использованы"):
             assert response.status_code == 200
@@ -118,6 +118,8 @@ class TestGigaChatCompletions:
         Используем от 0.00005 до 2.6 так как в документации указано, что значения от 0.0 до 0.0001, то параметры
         temperature и top_p будут сброшены в режим, обеспечивающий максимально детерминированный (стабильный) ответ
         модели. Аналогично для значений от 2.0 - набор токенов в ответе модели может отличаться избыточной случайностью.
+        
+        Наблюдения: чем выше температура, тем дольше модель думает над ответом
         """)
     @pytest.mark.parametrize("temperature", [0.00005, 0.0001, 0.1, 0.5, 0.9, 1.0, 1.5, 2.0, 2.6])
     def test_chat_completions_temperature(self, api_base_url, api_headers, temperature):
@@ -135,7 +137,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step(f"Отправляем запрос с temperature={temperature}"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
 
         with allure.step("Проверяем успешность ответа и структуру"):
             assert response.status_code == 200
@@ -160,7 +162,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с ограничением max_tokens=50"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
 
         with allure.step("Проверяем, что лимит токенов не превышен"):
             assert response.status_code == 200
@@ -188,7 +190,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с пустым сообщением"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
 
         with allure.step("Проверяем, что API возвращает ожидаемую ошибку"):
             assert response.status_code in [422]
@@ -210,7 +212,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с невалидной моделью"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
 
         with allure.step("Проверяем, что возвращается один из ожидаемых кодов ошибки"):
             assert response.status_code in [400, 404, 422]
@@ -232,7 +234,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос для детальной проверки структуры"):
-            response = requests.post(url, json=payload, headers=api_headers)
+            response = requests.post(url, json=payload, headers=api_headers, verify=False)
 
         with allure.step("Проверяем статус и структуру ответа"):
             assert response.status_code == 200
