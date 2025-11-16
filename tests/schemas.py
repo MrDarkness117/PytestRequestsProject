@@ -3,7 +3,6 @@
 schema_chat_completion = {
     "type": "object",
     "properties": {
-        "id": {"type": "string"},
         "object": {"type": "string"},
         "created": {"type": "integer"},
         "model": {"type": "string"},
@@ -37,5 +36,5 @@ schema_chat_completion = {
             "required": ["prompt_tokens", "completion_tokens", "total_tokens"]
         }
     },
-    "required": ["id", "object", "created", "model", "choices", "usage"]
+    "required": ["object", "created", "model", "choices", "usage"]
 }
