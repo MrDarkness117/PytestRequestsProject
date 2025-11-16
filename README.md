@@ -1,6 +1,6 @@
 # Pytest Requests Project - GigaChat API Testing
 
-Фреймворк для автоматического тестирования GigaChat API с использованием PyTest.
+Фреймворк по автотестам GigaChat API с использованием PyTest.
 
 ## Установка
 
