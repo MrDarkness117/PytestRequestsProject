@@ -10,8 +10,18 @@ load_dotenv()
 GIGACHAT_BASIC_AUTH_TOKEN = os.getenv('GIGACHAT_BASIC_AUTH_TOKEN')
 GIGACHAT_API_BASE_URL = os.getenv('GIGACHAT_API_BASE_URL', 'https://gigachat.devices.sberbank.ru/api/v1')
 GIGACHAT_OAUTH_URL = os.getenv('GIGACHAT_OAUTH_URL', 'https://ngw.devices.sberbank.ru:9443/api/v2/oauth')
+GIGACHAT_SSL_CERT = os.getenv('GIGACHAT_SSL_CERT')  # Путь к SSL сертификату (.pem файл)
 
-from . import BASEURL_API
+
+def get_verify_setting():
+    """
+    Определяет настройку verify для requests.
+    Если указан GIGACHAT_SSL_CERT и файл существует - использует его.
+    Иначе возвращает False, топ-варик когда лень возиться с сертификатами :)
+    """
+    if GIGACHAT_SSL_CERT and os.path.exists(GIGACHAT_SSL_CERT):
+        return GIGACHAT_SSL_CERT
+    return False
 
 
 def get_token():
@@ -37,9 +47,9 @@ def get_token():
         'Authorization': auth_header
     }
 
-    # отключаем проверку сертификата в verify=False. В идеале нужен .pem сертификат, буду временно без него.
-    # TODO: Добавить загрузку .pem-сертификата для контейнера
-    response = requests.post(GIGACHAT_OAUTH_URL, headers=headers, data=payload, verify=False)
+    # Используем SSL сертификат если он указан, иначе отключаем проверку
+    verify = get_verify_setting()
+    response = requests.post(GIGACHAT_OAUTH_URL, headers=headers, data=payload, verify=verify)
     response.raise_for_status()  # Вызовет исключение при ошибке HTTP
     
     response_data = response.json()
@@ -79,8 +89,18 @@ def api_headers(access_token):
     return {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
+        'User-Agent': 'Chrome',
         'Accept': 'application/json',
         'X-Request-ID': str(uuid.uuid4()),
         'X-Session-ID': str(uuid.uuid4())
     }
+
+
+@pytest.fixture(scope="session")
+def verify_ssl():
+    """
+    Фикстура для настройки SSL верификации в тестах.
+    Использует GIGACHAT_SSL_CERT, либо False если не указан.
+    """
+    return get_verify_setting()
 

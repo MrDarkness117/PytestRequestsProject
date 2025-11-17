@@ -1,3 +1,36 @@
 .env
 *.pyc
 /.idea
+
+# Allure результаты (генерируются при запуске тестов)
+allure-results/
+allure-report/
+
+# Python виртуальное окружение
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SSL сертификаты (не коммитим в репозиторий)
+certs/*.pem
+certs/*.crt
+certs/*.key
+!certs/README.md

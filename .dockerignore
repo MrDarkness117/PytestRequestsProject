@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Allure результаты (генерируются при запуске)
+allure-results/
+allure-report/
+
+# Git
+.git/
+.gitignore
+
+# Environment variables (не копируем .env в образ)
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jenkins
+Jenkinsfile
+JENKINS_SETUP.md
+
+# Documentation (опционально, можно оставить)
+# README.md
+
+# Docker
+Dockerfile
+.dockerignore
+
