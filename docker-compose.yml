@@ -8,13 +8,12 @@ services:
     image: gigachat-api-tests:latest
     container_name: gigachat-tests
     environment:
-      # Обязательные переменные окружения
-      - GIGACHAT_BASIC_AUTH_TOKEN=${GIGACHAT_BASIC_AUTH_TOKEN}
-      # Опциональные переменные (можно переопределить)
+      # Обязательная переменная Token.
+      - GIGACHAT_BASIC_AUTH_TOKEN=${GIGACHAT_BASIC_AUTH_TOKEN}     
       - GIGACHAT_API_BASE_URL=${GIGACHAT_API_BASE_URL:-https://gigachat.devices.sberbank.ru/api/v1}
       - GIGACHAT_OAUTH_URL=${GIGACHAT_OAUTH_URL:-https://ngw.devices.sberbank.ru:9443/api/v2/oauth}
-      # SSL сертификат (если указан, будет использован для verify)
-      - GIGACHAT_CA_BUNDLE=${GIGACHAT_CA_BUNDLE:-/certs/sber_ca_bundle.pem}
+      # SSL сертификат (необязательно)
+      - GIGACHAT_SSL_CERT=${GIGACHAT_SSL_CERT:-/certs/sber_ca_bundle.pem}
     volumes:
       # Монтируем директорию для Allure результатов
       - ./allure-results:/app/allure-results
