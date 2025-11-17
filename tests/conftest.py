@@ -49,7 +49,7 @@ def get_token():
 
     # Используем SSL сертификат если он указан, иначе отключаем проверку
     verify = get_verify_setting()
-    response = requests.post(GIGACHAT_OAUTH_URL, headers=headers, data=payload, verify=verify)
+    response = requests.post(GIGACHAT_OAUTH_URL, headers=headers, data=payload, verify=verify, proxies={'http': None, 'https': None})
     response.raise_for_status()  # Вызовет исключение при ошибке HTTP
     
     response_data = response.json()

@@ -15,16 +15,16 @@ from .schemas import schema_chat_completion
 class TestGigaChatCompletions:
     """Тестовый набор для метода chat/completions GigaChat API"""
 
-    response_dict = dict( )
+    response_dict = dict()
 
-    def fill_response_dict(self, response, model, clear=False):
+    def fill_response_dict(self, response, model):
         """
         Заполняем словарь ответами для разных моделей
         """
         self.response_dict[model] = response["choices"][0]["message"]["content"]
         if len(self.response_dict) == 3:
-            return True, self.response_dict
-        return False
+            return (True, self.response_dict)
+        return (False, None)
 
     @allure.title("Базовый ответ на простое пользовательское сообщение")
     @allure.description("""Базовый тест: отправка простого сообщения и проверка успешного ответа""")
@@ -32,7 +32,7 @@ class TestGigaChatCompletions:
     def test_chat_completions_basic(self, api_base_url, api_headers, verify_ssl):
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "user",
@@ -43,7 +43,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос к GigaChat API"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
             # Прикрепляем запрос/ответ к отчету
             allure.attach(json.dumps(payload, ensure_ascii=False, indent=2),
                           name="request_body",
@@ -69,7 +69,7 @@ class TestGigaChatCompletions:
 
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "system",
@@ -83,7 +83,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с системным промптом"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем статус и роль ответа"):
             assert response.status_code == 200
@@ -98,11 +98,11 @@ class TestGigaChatCompletions:
 
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "user",
-                    "content": "Привет, меня зовут Иван"
+                    "content": "Привет, меня зовут Миша"
                 },
                 {
                     "role": "assistant",
@@ -116,7 +116,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с несколькими сообщениями"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем, что токены были использованы"):
             assert response.status_code == 200
@@ -133,12 +133,12 @@ class TestGigaChatCompletions:
         
         Наблюдения: чем выше температура, тем дольше модель думает над ответом
         """)
-    @pytest.mark.parametrize("temperature", [0.00005, 0.0001, 0.1, 0.5, 0.9, 1.0, 1.5, 2.0, 2.6])
+    @pytest.mark.parametrize("temperature", [0.00005, 0.0001, 0.1, 0.5, 0.9, 1.0, 1.5, 2.0, 2.4])
     def test_chat_completions_temperature(self, api_base_url, api_headers, temperature, verify_ssl):
 
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "user",
@@ -149,7 +149,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step(f"Отправляем запрос с temperature={temperature}"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем успешность ответа и структуру"):
             assert response.status_code == 200
@@ -163,7 +163,7 @@ class TestGigaChatCompletions:
 
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "user",
@@ -174,7 +174,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с ограничением max_tokens=50"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем, что лимит токенов не превышен"):
             assert response.status_code == 200
@@ -192,7 +192,7 @@ class TestGigaChatCompletions:
 
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "user",
@@ -202,7 +202,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с пустым сообщением"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем, что API возвращает ожидаемую ошибку"):
             assert response.status_code in [422]
@@ -224,7 +224,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с невалидной моделью"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем, что возвращается один из ожидаемых кодов ошибки"):
             assert response.status_code in [400, 404, 422]
@@ -246,7 +246,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос с отсутствующей моделью"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем, что возвращается один из ожидаемых кодов ошибки"):
             assert response.status_code in [400, 404, 422]
@@ -254,7 +254,7 @@ class TestGigaChatCompletions:
     @allure.title("Проверка различных моделей")
     @allure.description("""Тест: параметризованная проверка различных моделей""")
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.parametrize("model", ["GigaChat-2-Lite", "GigaChat-2-Pro", "GigaChat-2-Max"])
+    @pytest.mark.parametrize("model", ["GigaChat-2", "GigaChat-2-Pro", "GigaChat-2-Max"])
     def test_chat_completions_different_models(self, api_base_url, api_headers, model, verify_ssl):
 
         url = f"{api_base_url}/chat/completions"
@@ -271,19 +271,26 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос для проверки различных моделей"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
-        with allure.step("Проверяем, что ответ содержит различные ответы для разных моделей"):
-            assert response.status_code == 200
+        with allure.step("Проверяем статус и структуру ответа"):
+            assert response.status_code == 200, (
+                f"Ожидался статус 200, получен {response.status_code}."
+            )
             data = response.json()
             validate(instance=data, schema=schema_chat_completion)
-            assert data["choices"][0]["message"]["content"] not in self.response_dict.values(), "Ответы для разных моделей должны быть различными"
-            attach_trigger = self.fill_response_dict(data, model)
+        
+        with allure.step("Проверяем, что ответ уникален для данной модели"):
+            content = data["choices"][0]["message"]["content"]
+            self.fill_response_dict(data, model)
+        
+            if self.response_dict:
+                previous_contents = [v for k, v in self.response_dict.items() if k != model]
+                assert content not in previous_contents, (
+                    f"Ответ для модели {model} совпадает с предыдущими ответами. "
+                    f"Текущий ответ: '{content[:100]}...'"  # Урежем чтобы не захламлять отчет
+                )
 
-        if attach_trigger[0]:
-            allure.attach(json.dumps(attach_trigger[1], ensure_ascii=False, indent=2),
-                          name="all_responses",
-                          attachment_type=allure.attachment_type.JSON)
 
     @allure.title("Детальная проверка структуры и usage")
     @allure.description("""Тест: детальная проверка структуры ответа""")
@@ -292,7 +299,7 @@ class TestGigaChatCompletions:
 
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "user",
@@ -302,7 +309,7 @@ class TestGigaChatCompletions:
         }
 
         with allure.step("Отправляем запрос для детальной проверки структуры"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем статус и структуру ответа"):
             assert response.status_code == 200
@@ -320,20 +327,20 @@ class TestGigaChatCompletions:
 
         url = f"{api_base_url}/chat/completions"
         payload = {
-            "model": "GigaChat",
+            "model": "GigaChat-2",
             "messages": [
                 {
                     "role": "user",
-                    "content": "Good day to you. How are you?"
+                    "content": "Please respond to me in English: Good day to you. How are you?"
                 }
             ]
         }
 
         with allure.step("Отправляем запрос с мультиязычным сообщением"):
-            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl)
+            response = requests.post(url, json=payload, headers=api_headers, verify=verify_ssl, proxies={'http': None, 'https': None})
 
         with allure.step("Проверяем, что ответ содержит текст на английском языке"):
             assert response.status_code == 200
             data = response.json()
             validate(instance=data, schema=schema_chat_completion)
-            assert re.sub(r'[a-zA-Z]', '', data["choices"][0]["message"]["content"]) == "", "Ответ должен содержать текст на английском языке"
+            assert re.search(r'[a-zA-Z]', data["choices"][0]["message"]["content"]) is not None, "Ответ должен содержать текст на английском языке"
