@@ -79,7 +79,7 @@ allure open allure-report
    - `GIGACHAT_BASIC_AUTH_TOKEN` — токен авторизации
    - `GIGACHAT_API_BASE_URL` (опционально)
    - `GIGACHAT_OAUTH_URL` (опционально)
-   - `GIGACHAT_CA_BUNDLE` (опционально, для SSL сертификата)
+   - `GIGACHAT_SSL_CERT` (опционально, для SSL сертификата)
 
    **Рекомендуемый способ:** Используйте Jenkins Credentials (Secret text) для хранения токена.
 
