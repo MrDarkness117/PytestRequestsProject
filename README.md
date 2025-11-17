@@ -177,14 +177,14 @@ allure open allure-report
 3. Установите переменную окружения:
    ```bash
    # В .env файле или через docker-compose
-   GIGACHAT_CA_BUNDLE=/certs/sber_ca_bundle.pem
+   GIGACHAT_SSL_CERT=/certs/sber_ca_bundle.pem
    ```
 
 4. При запуске через Docker Compose сертификат автоматически будет смонтирован и использован
 
 **Локальный запуск (без Docker):**
 ```bash
-export GIGACHAT_CA_BUNDLE=/path/to/sber_ca_bundle.pem
+export GIGACHAT_SSL_CERT=/path/to/sber_ca_bundle.pem
 pytest -v -m gigachat
 ```
 
