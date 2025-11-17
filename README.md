@@ -15,7 +15,7 @@ pip install -r requirements.txt
 GIGACHAT_API_BASE_URL=https://gigachat.devices.sberbank.ru/api/v1
 GIGACHAT_OAUTH_URL=https://ngw.devices.sberbank.ru:9443/api/v2/oauth
 # Токен авторизации
-GIGACHAT_BASIC_AUTH_TOKEN
+GIGACHAT_BASIC_AUTH_TOKEN=<token>
 ```
 
 ## Запуск тестов
