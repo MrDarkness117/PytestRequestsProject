@@ -1,0 +1,32 @@
+name: GigaChat API Autotests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run tests and export allure results
+      env: 
+        GIGACHAT_BASIC_AUTH_TOKEN: $({ secrets.GIGACHAT_BASIC_AUTH_TOKEN })
+        GIGACHAT_API_BASE_URL: ${{ secrets.GIGACHAT_API_BASE_URL || 'https://gigachat.devices.sberbank.ru/api/v1' }}
+        GIGACHAT_OAUTH_URL: ${{ secrets.GIGACHAT_OAUTH_URL || 'https://ngw.devices.sberbank.ru:9443/api/v2/oauth' }}
+        GIGACHAT_SSL_CERT: ${{ secrets.GIGACHAT_SSL_CERT }}
+      run: |
+        pytest -v -m gigachat --alluredir=allure-results --tb=short
