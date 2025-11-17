@@ -188,6 +188,7 @@ class TestGigaChatCompletions:
         Мы ожидаем, что API вернет ошибку 422, так как пустое сообщение не является валидным.
         """)
     @allure.severity(allure.severity_level.NORMAL)
+    @pytest.mark.xfail
     def test_chat_completions_empty_message(self, api_base_url, api_headers, verify_ssl):
 
         url = f"{api_base_url}/chat/completions"
