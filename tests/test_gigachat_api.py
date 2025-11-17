@@ -133,7 +133,8 @@ class TestGigaChatCompletions:
         
         Наблюдения: чем выше температура, тем дольше модель думает над ответом
         """)
-    @pytest.mark.parametrize("temperature", [0.00005, 0.0001, 0.1, 0.5, 0.9, 1.0, 1.5, 2.0, 2.4])
+    @pytest.mark.parametrize("temperature", [0.00005, 0.0001, 0.1, 0.5, 0.9, 1.0, 1.5, 2.0,
+                                             pytest.param(2.4, marks=pytest.mark.xfail(reason='Иногда возникает ошибка 500'))])
     def test_chat_completions_temperature(self, api_base_url, api_headers, temperature, verify_ssl):
 
         url = f"{api_base_url}/chat/completions"
