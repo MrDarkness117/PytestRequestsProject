@@ -30,3 +30,26 @@ jobs:
         GIGACHAT_SSL_CERT: ${{ secrets.GIGACHAT_SSL_CERT }}
       run: |
         pytest -v -m gigachat --alluredir=allure-results --tb=short
+
+    - name: Generate Allure report
+      if: always()
+      uses: simple-elf/allure-report-action@master  # Есть еще образ frankescobar/allure-docker-service:latest, но simple-elf как-то больше на слуху
+      with:
+        allure_results: allure_results
+        allure_history: allure_history
+
+    - name: Upload Allure results artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-results
+        path: allure-history/
+
+    - name: Upload report as artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-history/
+        
+        
