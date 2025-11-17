@@ -15,7 +15,7 @@ pip install -r requirements.txt
 GIGACHAT_API_BASE_URL=https://gigachat.devices.sberbank.ru/api/v1
 GIGACHAT_OAUTH_URL=https://ngw.devices.sberbank.ru:9443/api/v2/oauth
 # Токен авторизации
-GIGACHAT_BASIC_AUTH_TOKEN
+GIGACHAT_BASIC_AUTH_TOKEN=<token>
 ```
 
 ## Запуск тестов
@@ -79,7 +79,7 @@ allure open allure-report
    - `GIGACHAT_BASIC_AUTH_TOKEN` — токен авторизации
    - `GIGACHAT_API_BASE_URL` (опционально)
    - `GIGACHAT_OAUTH_URL` (опционально)
-   - `GIGACHAT_CA_BUNDLE` (опционально, для SSL сертификата)
+   - `GIGACHAT_SSL_CERT` (опционально, для SSL сертификата)
 
    **Рекомендуемый способ:** Используйте Jenkins Credentials (Secret text) для хранения токена.
 
@@ -177,14 +177,14 @@ allure open allure-report
 3. Установите переменную окружения:
    ```bash
    # В .env файле или через docker-compose
-   GIGACHAT_CA_BUNDLE=/certs/sber_ca_bundle.pem
+   GIGACHAT_SSL_CERT=/certs/sber_ca_bundle.pem
    ```
 
 4. При запуске через Docker Compose сертификат автоматически будет смонтирован и использован
 
 **Локальный запуск (без Docker):**
 ```bash
-export GIGACHAT_CA_BUNDLE=/path/to/sber_ca_bundle.pem
+export GIGACHAT_SSL_CERT=/path/to/sber_ca_bundle.pem
 pytest -v -m gigachat
 ```
 
@@ -216,6 +216,7 @@ pytest -v -m gigachat
 - Тест диалога с несколькими сообщениями
 - Тесты с различными параметрами (temperature, max_tokens)
 - Тесты обработки ошибок
+- Тесты моделей
 - Детальная проверка структуры ответа
 
 Все тесты используют валидацию JSON схем для проверки структуры ответов API.
